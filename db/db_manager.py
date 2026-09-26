@@ -16,8 +16,8 @@ class DatabaseManager:
     def connect(self):
         """Connect to SQLite database."""
         try:
-            # 🐛 FIX: isolation_level=None forces Auto-Commit mode. 
-            # This completely stops SQLite from caching stale read-snapshots between Streamlit reruns!
+            # isolation_level=None forces Auto-Commit mode. 
+            # This completely stops SQLite from caching stale read-snapshots between Streamlit reruns
             self.conn = sqlite3.connect(self.db_path, check_same_thread=False, isolation_level=None)
             self.cursor = self.conn.cursor()
             # Enable Foreign Keys
@@ -37,9 +37,7 @@ class DatabaseManager:
         except Exception as e:
             print(f"❌ Error creating tables: {e}")
 
-    # ----------------------------------------------------
-    # 📁 Papers Operations
-    # ----------------------------------------------------
+    #paper operations
     def insert_paper(self, file_name: str, file_hash: str, file_path: str):
         """Insert new paper record if not present."""
         try:
@@ -62,9 +60,7 @@ class DatabaseManager:
         self.cursor.execute("SELECT id, file_name, file_hash, uploaded_at FROM papers ORDER BY uploaded_at DESC")
         return self.cursor.fetchall()
 
-    # ----------------------------------------------------
-    # 🗺️ MiA Global Memory Operations
-    # ----------------------------------------------------
+    #mia operations
     def get_mia_map(self, paper_id: int):
         """Fetch cached MiA global summary for a paper."""
         self.cursor.execute("SELECT global_summary, key_concepts FROM mia_maps WHERE paper_id = ?", (paper_id,))
@@ -82,9 +78,7 @@ class DatabaseManager:
         except sqlite3.Error as e:
             print(f"❌ Error inserting MiA map: {e}")
 
-    # ----------------------------------------------------
-    # 💬 Chat Session Operations
-    # ----------------------------------------------------
+    #chat session operations
     def create_chat_session(self, paper_id: int, session_name: str) -> int:
         """Create a new conversation session for a specific paper."""
         try:
@@ -138,9 +132,7 @@ class DatabaseManager:
         rows = self.cursor.fetchall()
         return [{"role": r[0], "content": r[1]} for r in rows]
 
-    # ----------------------------------------------------
-    # ⚡ Query Cache Operations
-    # ----------------------------------------------------
+    #query cache operations
     def get_cached_response(self, query_hash: str):
         """Return cached query result."""
         self.cursor.execute("""
