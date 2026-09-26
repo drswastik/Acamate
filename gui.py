@@ -3,14 +3,12 @@ import tempfile
 import streamlit as st
 from datetime import datetime
 
-# Import our custom backend modules
+# Import custom backend modules
 from db.db_manager import DatabaseManager
 from core.pdf_handler import PDFHandler
 from core.response_generator import ResponseGenerator
 
-# ==========================================
-# 1. Page Configuration & CSS
-# ==========================================
+#page configuration and custom CSS for chat interface
 st.set_page_config(page_title="AcaMate Research Engine", page_icon="🤖", layout="wide")
 
 st.markdown("""
@@ -20,14 +18,12 @@ st.markdown("""
     </style>
 """, unsafe_allow_html=True)
 
-# ==========================================
-# 2. Initialize Backend in Session State
-# ==========================================
+#initialise the database and backend components
 if "backend_loaded" not in st.session_state:
     st.session_state.db = DatabaseManager()
     st.session_state.db.create_tables()
     
-    # 🐛 BULLETPROOF GENERAL CHAT HACK: Create a dummy paper in the DB to unify the session architecture
+    # Create a dummy paper in the DB to unify the session architecture
     if not st.session_state.db.get_paper_id("GENERAL_KNOWLEDGE"):
         st.session_state.db.insert_paper("🌍 General AI Chat (No PDF)", "GENERAL_KNOWLEDGE", "N/A")
     
@@ -52,9 +48,7 @@ def load_session_history(session_id):
     for msg in raw_history:
          st.session_state.chat_history.append({"role": msg["role"], "content": msg["content"], "trace": None})
 
-# ==========================================
-# 3. Sidebar UI
-# ==========================================
+#sidebar ui
 with st.sidebar:
     st.title("🤖 AcaMate Library")
     st.markdown("---")
@@ -77,7 +71,7 @@ with st.sidebar:
 
     options_list = list(paper_options.keys())
 
-    # 🐛 CRITICAL FIX: Safe UI State Mutation 
+    # Safe UI State Mutation 
     # We intercept the forced selection BEFORE the selectbox is instantiated to prevent crashes
     if "force_paper_selection" in st.session_state:
         if st.session_state.force_paper_selection in options_list:
@@ -101,7 +95,7 @@ with st.sidebar:
                     new_paper_id = db.get_paper_id(paper_info['file_hash'])
                     new_key = f"[{new_paper_id}] {paper_info['file_name']}"
                     
-                    # Store the command safely for the NEXT rerun
+                    # Store the command safely for the next rerun
                     st.session_state.force_paper_selection = new_key
                     
                     # Reset the chat session states
@@ -112,7 +106,7 @@ with st.sidebar:
                     st.success(f"Successfully processed {paper_info['file_name']}!")
                     st.rerun()
 
-    # Handle Paper Switching smoothly
+    # Handle Paper Switching 
     current_paper = paper_options.get(selected_paper_key)
     if current_paper != st.session_state.paper_data:
         st.session_state.paper_data = current_paper
@@ -148,9 +142,7 @@ with st.sidebar:
                 st.session_state.active_session_name = selected_session_key.split(": ")[1]
                 load_session_history(session_id)
 
-# ==========================================
-# 4. Main Chat Interface & Trace Execution
-# ==========================================
+# main chat interface
 if not st.session_state.paper_data:
     st.title("Welcome to AcaMate 🤖")
     st.info("👈 Please select General Chat or upload a research paper from the sidebar to begin.")
