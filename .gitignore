@@ -1,0 +1,33 @@
+# Byte-compiled / optimized files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual environments & Conda
+venv/
+env/
+ENV/
+.env
+
+# SQLite Databases & Local Storage
+*.db
+*.sqlite
+*.sqlite3
+data/
+db/*.db
+
+# Vector Indexes & Large Cache Files
+*.faiss
+*.pkl
+flan-t5-small/
+models/
+
+# Uploaded User Data
+*.pdf
+temp/
+
+# IDE & OS Files
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
