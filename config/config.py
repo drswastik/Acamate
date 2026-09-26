@@ -9,12 +9,12 @@ ENV_PATH = BASE_DIR / ".env"
 # Load environment variables explicitly from root .env
 load_dotenv(dotenv_path=ENV_PATH)
 
-# --- Gemini API ---
+# Gemini API 
 GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
 
-# --- Database ---
+# Database 
 DB_PATH = os.path.join(BASE_DIR, "data", "acamate.db")
 
-# --- Safety Check ---
+# Safety Check 
 if not GEMINI_API_KEY:
     raise ValueError("❌ Gemini API key not found! Please check your root .env file.")
