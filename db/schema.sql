@@ -1,8 +1,7 @@
--- =====================================================
--- AcaMate Database Schema (v4 - Conversational Memory)
--- =====================================================
+-- AcaMate Database Schema 
 
--- 🧠 Table 1: Papers Metadata (Hash-based identification)
+
+--  Table 1: Papers Metadata (Hash-based identification)
 CREATE TABLE IF NOT EXISTS papers (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     file_name TEXT NOT NULL,
@@ -11,7 +10,7 @@ CREATE TABLE IF NOT EXISTS papers (
     uploaded_at DATETIME DEFAULT CURRENT_TIMESTAMP
 );
 
--- 🗺️ Table 2: MiA Global Mindscape Maps
+--  Table 2: MiA Global Mindscape Maps
 CREATE TABLE IF NOT EXISTS mia_maps (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     paper_id INTEGER UNIQUE NOT NULL,
@@ -21,7 +20,7 @@ CREATE TABLE IF NOT EXISTS mia_maps (
     FOREIGN KEY (paper_id) REFERENCES papers(id)
 );
 
--- 💬 Table 3: Chat Sessions (Per-PDF Conversations)
+--  Table 3: Chat Sessions (Per-PDF Conversations)
 CREATE TABLE IF NOT EXISTS chat_sessions (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     paper_id INTEGER NOT NULL,
@@ -31,7 +30,7 @@ CREATE TABLE IF NOT EXISTS chat_sessions (
     FOREIGN KEY (paper_id) REFERENCES papers(id)
 );
 
--- 🗨️ Table 4: Chat Messages (Multi-turn Memory)
+--  Table 4: Chat Messages (Multi-turn Memory)
 CREATE TABLE IF NOT EXISTS chat_messages (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     session_id INTEGER NOT NULL,
@@ -43,7 +42,7 @@ CREATE TABLE IF NOT EXISTS chat_messages (
     FOREIGN KEY (session_id) REFERENCES chat_sessions(id) ON DELETE CASCADE
 );
 
--- ⚡ Table 5: Exact Query Cache
+--  Table 5: Exact Query Cache
 CREATE TABLE IF NOT EXISTS query_cache (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     paper_id INTEGER NOT NULL,
